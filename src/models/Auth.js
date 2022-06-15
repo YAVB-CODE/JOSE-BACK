@@ -1,6 +1,6 @@
 const JWT = require("jsonwebtoken");
 const config = require("../config");
-const TokenInvalidException = require("../exceptions/TokenInvalid");
+const Unauthorized = require("../exceptions/Unauthorized");
 
 class Auth {
   constructor(props) {
@@ -12,10 +12,13 @@ class Auth {
   }
 
   static decodeOrValidateToken(token) {
+    let decodeToken = {};
     JWT.verify(token, config.KEY_SECRET_TOKEN, (error, decode) => {
-      if (error) throw new TokenInvalidException();
-      return decode;
+      if (error) throw new Unauthorized();
+      decodeToken = decode;
     });
+
+    return decodeToken;
   }
 }
 

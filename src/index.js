@@ -15,6 +15,8 @@ app.use(cors());
 
 //ROUTES
 app.use(require("./routes/auth"));
+app.use(require("./routes/question"));
+app.use(require("./routes/answers"));
 
 app.listen(config.PORT, () =>
   console.log("SERVER RUNNING ON PORT: " + config.PORT)

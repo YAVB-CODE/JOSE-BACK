@@ -1,16 +1,22 @@
 const Auth = require("../../models/Auth");
+const Response = require("../../models/Response");
+const Request = require("../../models/Request");
+const { validationPerson } = require("../../utils");
 
-function authValidation(req, res) {
+async function authValidation(req, res) {
+  const request = new Request(req);
+  const response = new Response(res);
   try {
-    const { fullName, dni, area } = req.body;
+    const { fullName, dni, area } = request.getBody();
+
+    await validationPerson(dni);
 
     const auth = new Auth({ fullName, dni, area });
-
     const tokenGenerated = auth.createToken();
-
-    return res.status(200).json({ token: tokenGenerated });
+    
+    return response.format(200, { token: tokenGenerated });
   } catch (error) {
-    return res.status(error.code).json({ message: error.message });
+    return response.handleException(error);
   }
 }
 
